@@ -15,8 +15,7 @@ const GroupsPage = () => {
     groupsService
       .getAll()
       .then((res) => {
-        console.log('repuesta', res)
-        setGroups(res.data.groups);
+        setGroups(res.data);
         setIsLoading(false);
       })
       .catch((error) => {
