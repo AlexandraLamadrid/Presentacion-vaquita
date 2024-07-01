@@ -24,7 +24,22 @@ const GroupsPage = () => {
       });
   };
 
-  useEffect(() => {
+  const handleDeleteGroup = (groupId) => {
+    if (window.confirm("Are you sure you want to delete this group?")) {
+      groupsService.deleteById(groupId)
+        .then(() => {
+          alert('Group successfully deleted');
+          fetchGroups(); 
+        })
+        .catch(error => {
+          console.error('Failed to delete the group:', error);
+          alert('Failed to delete the group');
+        });
+    }
+  };
+  
+    useEffect(() => {
+      console.log(groupId);
     fetchGroups();
   }, []);
 
@@ -52,7 +67,7 @@ const GroupsPage = () => {
               </span>
               <div className="flex gap-4">
                 <Button text="View" action={() => navigate(`/groups/${group.id}`)} size="sm" />
-                <Button text="Delete" action={() => console.log('click on delete')} size="sm" />
+                <Button text="Delete" action={() => handleDeleteGroup(group.id)} size="sm" />
               </div>
             </Card>
           ))}

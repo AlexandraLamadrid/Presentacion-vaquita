@@ -38,4 +38,15 @@ const edit = (body) => {
   });
 };
 
-export { getAll, getById, create, edit };
+
+const deleteById = (id) => {
+  return axios.delete(`${BASE_URL}/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+  });
+};
+
+
+export { getAll, getById, create, edit, deleteById };
