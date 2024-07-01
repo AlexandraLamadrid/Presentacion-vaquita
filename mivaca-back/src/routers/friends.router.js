@@ -1,17 +1,19 @@
-import FriendRouter from "./friends.router"; 
+import Router from "express-promise-router";
+import Controller from "../controllers/friends.controller.js";
+import continuator from "../lib/continue.decorator.js";
 
+const FriendsRouter = () => {
 
+    const router = Router();
+    const controller = Controller();
 
+    router.get('/', continuator(controller.getAll));
+    router.get('/:id', continuator(controller.getById));
+    router.delete('/:id', continuator(controller.deleteById));
+    router.post('/', continuator(controller.create));
+    router.put('/:id', continuator(controller.fullUpdateById));
 
+    return router;
+};
 
-
-
-
-
-
-
-
-
-
-
-export default FriendRouter;
+export default FriendsRouter;
