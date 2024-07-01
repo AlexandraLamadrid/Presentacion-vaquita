@@ -24,6 +24,7 @@ const GroupsPage = () => {
       });
   };
 
+
   const handleDeleteGroup = (groupId) => {
     if (window.confirm("Are you sure you want to delete this group?")) {
       groupsService.deleteById(groupId)
@@ -39,7 +40,6 @@ const GroupsPage = () => {
   };
   
     useEffect(() => {
-      console.log(groupId);
     fetchGroups();
   }, []);
 
