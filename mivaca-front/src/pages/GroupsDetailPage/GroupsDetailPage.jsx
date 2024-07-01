@@ -40,7 +40,7 @@ const GroupsDetailPage = () => {
   const fetchGroup = () => {
     groupsService
       .getById(params.id)
-      .then((res) => setGroup(res.data.group))
+      .then((res) => setGroup(res.data))
       .catch((error) => console.log(error));
   };
 
