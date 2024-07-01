@@ -44,6 +44,20 @@ const GroupsDetailPage = () => {
       .catch((error) => console.log(error));
   };
 
+  const handleDeleteGroup = (groupId) => {
+    if (window.confirm("Are you sure you want to delete this group?")) {
+      groupsService.deleteById(groupId)
+        .then(() => {
+          alert('Group successfully deleted');
+          fetchGroups(); 
+        })
+        .catch(error => {
+          console.error('Failed to delete the group:', error);
+          alert('Failed to delete the group');
+        });
+    }
+  };
+
   useEffect(() => {
     if (!params.id) {
       return;
@@ -71,7 +85,7 @@ const GroupsDetailPage = () => {
               <span>You owe: </span> <span className="text-vaki-green">$12000</span>
             </span>
             <div className="flex gap-4">
-              <Button text="Delete" action={() => console.log('click on delete')} size="sm" />
+              <Button text="Delete" action={() => handleDeleteGroup(group)}/>
             </div>
           </Card>
         </div>
@@ -94,8 +108,8 @@ const GroupsDetailPage = () => {
                 {expense.owe > 0 ? `I owe $${expense.owe}` : 'I did not participate'}
               </span>
               <div className="flex gap-4">
-                <Button text="Edit" action={() => console.log('click on edit')} size="sm" />
-                <Button text="Delete" action={() => console.log('click on delete')} size="sm" />
+              <Button text="View" action={() => navigate(`/groups/${group.id}`)} size="sm" />
+                <Button text="Delete" action={() => handleDeleteGroup(group.id)} size="sm" />
               </div>
             </Card>
           ))}
