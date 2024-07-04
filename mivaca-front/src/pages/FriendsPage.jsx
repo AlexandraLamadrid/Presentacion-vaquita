@@ -1,12 +1,54 @@
+import { useEffect, useState } from 'react';
+import * as friendService from '../services/FriendService';
+import Card from '../components/Card/Card';
+
 const FriendsPage = () => {
+  const [friends, setFriends] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const fetchFriends = () => {
+    friendService
+      .getAll()
+      .then((res) => {
+        const userId = sessionStorage.getItem('token');
+        const friends = res.data.filter(user => user.id != userId);
+        setFriends(friends);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
+
   return (
-    <div className="bg-slate-200 border rounded shadow-lg p-6">
-      <h1 className="text-3xl font-bold mb-4 text-center text-indigo-600">Friends List</h1>
-      <p className="text-lg text-center text-gray-700">Connect and share your activities with friends.</p>
-      <div className="mt-6 flex justify-center">
-        <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add New Friend</button>
+    <>
+      <div className="flex flex-col">
+        <div className="flex gap-2 flex-wrap md:flex-none justify-center">
+          {!friends.length && !isLoading && (
+            <h2 className="text-center text-vaki-secondary text-2xl mt-8">
+              Looks like there are not friends associated with you
+            </h2>
+          )}
+          {friends.map((friend, index) => (
+            <Card
+              key={index}
+              className="w-full sm:w-[calc(50%-4px)] xl:w-[calc(100%/3-8px)]"
+              color="white"
+            >
+              <h2 className="text-xl">{friend.name}</h2>
+              <span className="text-base">
+                <span> {friend.email} </span>
+              </span>
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

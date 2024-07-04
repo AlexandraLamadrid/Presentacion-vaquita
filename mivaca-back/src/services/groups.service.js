@@ -1,9 +1,12 @@
 import Repository from "../repositories/groups.repository.js";
+import GroupUserRepository from "../repositories/groups_users.repository.js";
 import AppError from "../lib/application.error.js";
 
 const Service = (dbClient) => {
 
     const repository = Repository(dbClient);
+
+    const groupUserRepository = GroupUserRepository(dbClient);
 
     const getAll = async () => {
         return await repository.getAll();
@@ -28,7 +31,10 @@ const Service = (dbClient) => {
             throw AppError('Ya existe un grupo con ese nombre', 409);
         }
 
-        return await repository.create(group);
+        const createGroup = await repository.create(group);
+        await groupUserRepository.create(createGroup.id, 0);
+        
+        return createGroup;
     }
 
     const fullUpdateById = async (group) => {

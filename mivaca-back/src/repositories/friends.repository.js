@@ -1,4 +1,4 @@
-const GET_ALL = `SELECT id, name, color FROM friends`;
+const GET_ALL = `SELECT id, name, email FROM users`;
 const GET_BY_ID = `${GET_ALL} WHERE id = $1`;
 const  DELETE_BY_ID = `DELETE FROM friends WHERE id = $1`;
 const CREATE = `

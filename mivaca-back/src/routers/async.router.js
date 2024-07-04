@@ -1,6 +1,7 @@
 import Router from "express-promise-router"
 import UserRouter from './users.router.js';
 import AuthRouter from './auth.router.js';
+import friendsRouter from './friends.router.js';
 import groupRouter from '../routers/groups.router.js';
 import { 
     connectDatabase, 
@@ -14,6 +15,7 @@ const AsyncRouter = () => {
 
     router.use(connectDatabase);
     router.use("/groups", groupRouter());
+    router.use("/friends", friendsRouter());
     router.use("/users", UserRouter());
     router.use("/auth", AuthRouter());
     router.use(commitDatabase);
