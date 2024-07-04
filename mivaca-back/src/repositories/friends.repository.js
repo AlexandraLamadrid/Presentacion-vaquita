@@ -1,5 +1,5 @@
-const GET_ALL = `SELECT id, name, email FROM users`;
-const GET_BY_ID = `${GET_ALL} WHERE id = $1`;
+const GET_ALL = `SELECT id, name, email FROM users WHERE id <> $1`;
+const GET_BY_ID = `SELECT id, name, email FROM users WHERE id = $1`;
 const  DELETE_BY_ID = `DELETE FROM friends WHERE id = $1`;
 const CREATE = `
     INSERT INTO friends (name, color) 
@@ -19,8 +19,8 @@ const COUNT_BY_NAME_NOT_ID = `
 
 const Repository = (dbClient) => {
 
-    const getAll = async () => {
-        const result = await dbClient.query(GET_ALL);
+    const getAll = async (loggedUserId) => {
+        const result = await dbClient.query(GET_ALL, [loggedUserId]);
         return result.rows;
     };
 

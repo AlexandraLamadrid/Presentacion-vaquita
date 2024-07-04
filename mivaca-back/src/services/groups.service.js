@@ -2,7 +2,7 @@ import Repository from "../repositories/groups.repository.js";
 import GroupUserRepository from "../repositories/groups_users.repository.js";
 import AppError from "../lib/application.error.js";
 
-const Service = (dbClient) => {
+const Service = (dbClient, loggedUserId) => {
 
     const repository = Repository(dbClient);
 
@@ -31,8 +31,8 @@ const Service = (dbClient) => {
             throw AppError('Ya existe un grupo con ese nombre', 409);
         }
 
-        const createGroup = await repository.create(group);
-        await groupUserRepository.create(createGroup.id, 0);
+        const createGroup = await repository.create(group, loggedUserId);
+        await groupUserRepository.create(createGroup.id, loggedUserId);
         
         return createGroup;
     }

@@ -18,6 +18,12 @@ const COUNT_BY_NAME_NOT_ID = `
     SELECT COUNT(*) FROM users WHERE name = $1 AND id <> $2
 `;
 
+const USERS_NOT_IN_GROUP = `
+    SELECT id, name, email FROM users
+    where id not in (select user_id from groups_users where group_id = $1)
+    ORDER BY id ASC 
+`;
+
 const Repository = (dbClient) => {
 
     const getAll = async () => {
@@ -73,6 +79,11 @@ const Repository = (dbClient) => {
         return count;
     }
 
+    const getUsersNotInGroup = async (groupId) => {
+        const result = await dbClient.query(USERS_NOT_IN_GROUP, [groupId]);
+        return result.rows;
+    }
+
     return {
         getAll,
         getById,
@@ -81,7 +92,8 @@ const Repository = (dbClient) => {
         countByName,
         fullUpdateById,
         getByEmailPassword,
-        countByNameNotId
+        countByNameNotId,
+        getUsersNotInGroup
     }
 }
 

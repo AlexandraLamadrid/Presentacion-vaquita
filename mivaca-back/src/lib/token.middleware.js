@@ -1,21 +1,15 @@
-const connectDatabase = async (req, res, next) => {
-    // resolve db client
-    let dbClient = null;
-    try {
-        dbClient = await pool.connect();
-        req.dbClient = dbClient;
-        req.doTransaction = requireTransactionMap[req.method] === true;
-        if (req.doTransaction) {
-            await req.dbClient.query('BEGIN');
-        }
-        console.info('database connected');
-        next();
-    } catch (err) {
-        res.status(503).end();
-        next(err);
-    }
+const checkAuth = (req, res, next) => {
+    const authHeader = req.get('Authorization');
+    const token = (authHeader+"").replaceAll('Bearer','').trim();
+    if (token.length === 0) {
+        res.status(401).end();
+        next(new Error('Unauthorized'));
+        return;
+    } 
+    req.user = {id: token};
+    next();
 }
 
 export {
-    connectDatabase
+    checkAuth
 };

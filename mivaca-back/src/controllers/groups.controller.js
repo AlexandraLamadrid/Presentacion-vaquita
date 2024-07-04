@@ -3,7 +3,7 @@ import Service from "../services/groups.service.js";
 const Controller = () => {
 
     const getAll = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
 
         const groups = await service.getAll();
         res.status(200).json(groups);
@@ -11,7 +11,7 @@ const Controller = () => {
 
     const getById = async (req, res) => {
 
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const group = await service.getById(req.params.id);
         if (group) {
             res.status(200).json(group);
@@ -21,7 +21,7 @@ const Controller = () => {
     }
 
     const deleteById = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const deleted = await service.deleteById(req.params.id);
         if (deleted) {
             res.status(200).end();
@@ -31,14 +31,14 @@ const Controller = () => {
     }
 
     const create = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const group = req.body;
         const createdGroup = await service.create(group);
         res.status(201).json(createdGroup);
     }
 
     const fullUpdateById = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const id = req.params.id;
         const group = {
             ...req.body,

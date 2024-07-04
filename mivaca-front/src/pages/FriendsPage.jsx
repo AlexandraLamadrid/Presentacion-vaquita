@@ -9,8 +9,7 @@ const FriendsPage = () => {
     friendService
       .getAll()
       .then((res) => {
-        const userId = sessionStorage.getItem('token');
-        const friends = res.data.filter(user => user.id != userId);
+        const friends = res.data;
         setFriends(friends);
         setIsLoading(false);
       })

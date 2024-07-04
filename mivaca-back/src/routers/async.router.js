@@ -3,6 +3,7 @@ import UserRouter from './users.router.js';
 import AuthRouter from './auth.router.js';
 import friendsRouter from './friends.router.js';
 import groupRouter from '../routers/groups.router.js';
+import { checkAuth } from '../lib/token.middleware.js';
 import { 
     connectDatabase, 
     commitDatabase, 
@@ -14,9 +15,9 @@ const AsyncRouter = () => {
     const router = Router();
 
     router.use(connectDatabase);
-    router.use("/groups", groupRouter());
-    router.use("/friends", friendsRouter());
-    router.use("/users", UserRouter());
+    router.use("/groups", checkAuth, groupRouter());
+    router.use("/friends", checkAuth, friendsRouter());
+    router.use("/users", checkAuth, UserRouter());
     router.use("/auth", AuthRouter());
     router.use(commitDatabase);
     router.use(rollbackDatabase);

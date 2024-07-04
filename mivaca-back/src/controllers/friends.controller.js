@@ -3,7 +3,7 @@ import Service from "../services/friends.service.js";
 const Controller = () => {
 
     const getAll = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
 
         const friend = await service.getAll();
         res.status(200).json(friend);
@@ -11,7 +11,7 @@ const Controller = () => {
 
     const getById = async (req, res) => {
 
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const friend = await service.getById(req.params.id);
         if (friend) {
             res.status(200).json(friend);
@@ -21,7 +21,7 @@ const Controller = () => {
     }
 
     const deleteById = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const deleted = await service.deleteById(req.params.id);
         if (deleted) {
             res.status(200).end();
@@ -31,14 +31,14 @@ const Controller = () => {
     }
 
     const create = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const friend = req.body;
         const createdFriend = await service.create(friend);
         res.status(201).json(createdFriend);
     }
 
     const fullUpdateById = async (req, res) => {
-        const service = Service(req.dbClient);
+        const service = Service(req.dbClient, req.user.id);
         const id = req.params.id;
         const friend = {
             ...req.body,

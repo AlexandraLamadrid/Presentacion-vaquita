@@ -1,10 +1,10 @@
-const GET_ALL = `SELECT id, name, color FROM groups`;
+const GET_ALL = `SELECT id, name, owneruserid, color FROM groups`;
 const GET_BY_ID = `${GET_ALL} WHERE id = $1`;
 const  DELETE_BY_ID = `DELETE FROM groups WHERE id = $1`;
 const CREATE = `
-    INSERT INTO groups (name, color) 
-    VALUES ($1,$2)
-    RETURNING id, name, color
+    INSERT INTO groups (name, color, owneruserid) 
+    VALUES ($1,$2,$3)
+    RETURNING id, name, color, owneruserid
 `; 
 const COUNT_BY_NAME = `SELECT COUNT(*) as count FROM groups WHERE name = $1`;
 const FULL_UPDATE_BY_ID = `
@@ -34,8 +34,8 @@ const Repository = (dbClient) => {
         return result.rowCount > 0;
     }
 
-    const create = async ({name, color}) => { 
-        const result = await dbClient.query(CREATE, [name, color]);
+    const create = async ({name, color}, owneruserid) => { 
+        const result = await dbClient.query(CREATE, [name, color, owneruserid]);
         return result.rows[0];
     }  
 

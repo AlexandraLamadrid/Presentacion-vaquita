@@ -1,12 +1,12 @@
 import Repository from "../repositories/friends.repository.js";
 import AppError from "../lib/application.error.js";
 
-const Service = (dbClient) => {
+const Service = (dbClient, loggedUserId) => {
 
-    const repository = Repository(dbClient);
+    const repository = Repository(dbClient, loggedUserId);
 
     const getAll = async () => {
-        return await repository.getAll();
+        return await repository.getAll(loggedUserId);
     }
 
     const getById = async (id) => {
