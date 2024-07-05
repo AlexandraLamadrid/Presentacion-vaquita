@@ -11,6 +11,4 @@ const getAll = () => {
   });
 };
 
-
-
 export { getAll };

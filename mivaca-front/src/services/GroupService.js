@@ -20,6 +20,15 @@ const getById = (id) => {
   });
 };
 
+const addFriendToGroup = (groupId, friend) => {
+  return axios.post(`${BASE_URL}/${groupId}/friends`, friend, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+  });
+};
+
 const create = (body) => {
   return axios.post(BASE_URL, body, {
     headers: {
@@ -49,4 +58,4 @@ const deleteById = (id) => {
 };
 
 
-export { getAll, getById, create, edit, deleteById };
+export { getAll, getById, create, edit, deleteById, addFriendToGroup };

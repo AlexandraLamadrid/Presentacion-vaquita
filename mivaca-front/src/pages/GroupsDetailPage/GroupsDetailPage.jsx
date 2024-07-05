@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import * as groupsService from '../../services/GroupService';
+import * as friendService from '../../services/FriendService';
 import EditModal from './components/EditModal/EditModal';
 import { useParams } from 'react-router-dom';
 
@@ -35,6 +36,11 @@ const expenses = [
 const GroupsDetailPage = () => {
   const [group, setGroup] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFriendModalOpen, setIsFriendModalOpen] = useState(false);
+  const [friends, setFriends] = useState([]);
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [isLoadingFriends, setIsLoadingFriends] = useState(true);
+  const [isAddingFriend, setIsAddingFriend] = useState(false);
   const params = useParams();
 
   const fetchGroup = () => {
@@ -44,18 +50,47 @@ const GroupsDetailPage = () => {
       .catch((error) => console.log(error));
   };
 
+  const fetchFriends = () => {
+    friendService
+      .getAll()
+      .then((res) => {
+        setFriends(res.data);
+        setIsLoadingFriends(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoadingFriends(false);
+      });
+  };
+
   const handleDeleteGroup = (groupId) => {
     if (window.confirm("Are you sure you want to delete this group?")) {
       groupsService.deleteById(groupId)
         .then(() => {
           alert('Group successfully deleted');
-          fetchGroups(); 
+          fetchGroups();
         })
         .catch(error => {
           console.error('Failed to delete the group:', error);
           alert('Failed to delete the group');
         });
     }
+  };
+
+  const handleAddFriend = () => {
+    if (!selectedFriend) return;
+    setIsAddingFriend(true);
+    groupsService.addFriendToGroup(params.id, { name: selectedFriend.name, email: selectedFriend.email })
+      .then(() => {
+        setIsAddingFriend(false);
+        setIsFriendModalOpen(false);
+        setSelectedFriend(null);
+        fetchGroup(); // Refresh the group details to include the new friend
+      })
+      .catch((error) => {
+        console.error('Failed to add friend:', error);
+        setIsAddingFriend(false);
+      });
   };
 
   useEffect(() => {
@@ -66,6 +101,10 @@ const GroupsDetailPage = () => {
     fetchGroup();
   }, [params]);
 
+  useEffect(() => {
+    fetchFriends();
+  }, []);
+
   if (!group) {
     return null;
   }
@@ -75,7 +114,7 @@ const GroupsDetailPage = () => {
       <div className="flex flex-col gap-8">
         <div className="flex flex-col xs:flex-row xs:justify-end my-4 gap-2 sm:gap-4">
           <Button text="New Expense" action={() => console.log('click on new expense')} />
-          <Button text="New Friend" action={() => console.log('click on new friend')} />
+          <Button text="New Friend" action={() => setIsFriendModalOpen(true)} />
           <Button text="Edit Group" action={() => setIsModalOpen(true)} />
         </div>
         <div>
@@ -108,7 +147,7 @@ const GroupsDetailPage = () => {
                 {expense.owe > 0 ? `I owe $${expense.owe}` : 'I did not participate'}
               </span>
               <div className="flex gap-4">
-              <Button text="View" action={() => navigate(`/groups/${group.id}`)} size="sm" />
+                <Button text="View" action={() => navigate(`/groups/${group.id}`)} size="sm" />
                 <Button text="Delete" action={() => handleDeleteGroup(group.id)} size="sm" />
               </div>
             </Card>
@@ -122,6 +161,35 @@ const GroupsDetailPage = () => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
         />
+      )}
+      {isFriendModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2 className="text-2xl font-semibold mb-4">Select Friend to Add</h2>
+            {isLoadingFriends ? (
+              <p>Loading friends...</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {friends.map((friend) => (
+                  <div
+                    key={friend.email}
+                    className={`p-4 border rounded cursor-pointer ${
+                      selectedFriend?.email === friend.email ? 'bg-blue-100 border-blue-500' : 'bg-white'
+                    }`}
+                    onClick={() => setSelectedFriend(friend)}
+                  >
+                    <h3 className="text-xl">{friend.name}</h3>
+                    <p className="text-sm text-gray-600">{friend.email}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mt-4 flex justify-end gap-2">
+              <Button text={isAddingFriend ? 'Adding...' : 'Add Friend'} action={handleAddFriend} disabled={isAddingFriend || !selectedFriend} />
+              <Button text="Close" action={() => setIsFriendModalOpen(false)} />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
