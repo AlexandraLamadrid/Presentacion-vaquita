@@ -23,7 +23,6 @@ const FriendsPage = () => {
     fetchFriends();
   }, []);
 
-
   return (
     <>
       <div className="flex flex-col">
@@ -43,6 +42,12 @@ const FriendsPage = () => {
               <span className="text-base">
                 <span> {friend.email} </span>
               </span>
+              <div className='flex gap-4'>
+                <button>
+                  Edit
+                  Delete
+                </button>
+              </div>
             </Card>
           ))}
         </div>

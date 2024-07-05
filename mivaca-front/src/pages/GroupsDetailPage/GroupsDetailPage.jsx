@@ -85,7 +85,7 @@ const GroupsDetailPage = () => {
         setIsAddingFriend(false);
         setIsFriendModalOpen(false);
         setSelectedFriend(null);
-        fetchGroup(); // Refresh the group details to include the new friend
+        fetchGroup();
       })
       .catch((error) => {
         console.error('Failed to add friend:', error);

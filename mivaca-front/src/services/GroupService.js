@@ -47,7 +47,6 @@ const edit = (body) => {
   });
 };
 
-
 const deleteById = (id) => {
   return axios.delete(`${BASE_URL}/${id}`, {
     headers: {
@@ -56,6 +55,5 @@ const deleteById = (id) => {
     },
   });
 };
-
 
 export { getAll, getById, create, edit, deleteById, addFriendToGroup };
