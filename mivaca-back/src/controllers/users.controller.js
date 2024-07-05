@@ -59,7 +59,14 @@ const Controller = () => {
         } else {
             res.status(404).end();
         }
+    }
 
+    const getUsersNotInGroup = async (req, res) => {
+        const groupId = req.params.groupId;
+        const service = UserService(req.dbClient);
+
+        const users = await service.getUsersNotInGroup(groupId);
+        res.status(200).json(users);
     }
 
     return {
@@ -68,7 +75,8 @@ const Controller = () => {
         deleteById,
         create,
         login,
-        fullUpdateById
+        fullUpdateById,
+        getUsersNotInGroup
     }
 }
 

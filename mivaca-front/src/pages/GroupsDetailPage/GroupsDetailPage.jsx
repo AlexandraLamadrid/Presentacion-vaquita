@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Button from '../../components/Button/Button';
 import Card from '../../components/Card/Card';
 import * as groupsService from '../../services/GroupService';
-import * as friendService from '../../services/FriendService';
+import * as userService from '../../services/UserService';
 import EditModal from './components/EditModal/EditModal';
 import { useParams } from 'react-router-dom';
 
@@ -51,8 +51,8 @@ const GroupsDetailPage = () => {
   };
 
   const fetchFriends = () => {
-    friendService
-      .getAll()
+    userService
+      .getAllNotInGroup(params.id)
       .then((res) => {
         setFriends(res.data);
         setIsLoadingFriends(false);
@@ -80,12 +80,13 @@ const GroupsDetailPage = () => {
   const handleAddFriend = () => {
     if (!selectedFriend) return;
     setIsAddingFriend(true);
-    groupsService.addFriendToGroup(params.id, { name: selectedFriend.name, email: selectedFriend.email })
+    groupsService.addFriendToGroup(params.id, selectedFriend.id)
       .then(() => {
         setIsAddingFriend(false);
         setIsFriendModalOpen(false);
         setSelectedFriend(null);
         fetchGroup();
+        fetchFriends(); 
       })
       .catch((error) => {
         console.error('Failed to add friend:', error);
@@ -122,6 +123,9 @@ const GroupsDetailPage = () => {
             <h2 className="text-xl">{group.name}</h2>
             <span className="text-base">
               <span>You owe: </span> <span className="text-vaki-green">$12000</span>
+            </span>
+            <span className="text-base">
+              <span>Participantes: </span> <span className="text-vaki-green">{group.nro_participantes}</span>
             </span>
             <div className="flex gap-4">
               <Button text="Delete" action={() => handleDeleteGroup(group)}/>

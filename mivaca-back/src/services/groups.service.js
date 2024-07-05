@@ -60,6 +60,10 @@ const Service = (dbClient, loggedUserId) => {
         });
     }
 
+    const addFriend = async (groupId, friendId) => {
+        return await groupUserRepository.create(groupId, friendId);
+    }
+
     const validaName = (newName) => {
         //Limpiar los datos
         const name = (newName || '').trim();
@@ -79,7 +83,8 @@ const Service = (dbClient, loggedUserId) => {
         getById,
         deleteById,
         create,
-        fullUpdateById
+        fullUpdateById,
+        addFriend
     }
 }
 

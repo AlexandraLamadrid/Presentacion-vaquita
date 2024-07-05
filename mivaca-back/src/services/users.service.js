@@ -79,6 +79,10 @@ const Service = (dbClient) => {
 
         return name;
     }
+
+    const getUsersNotInGroup = async (groupId) => {
+        return await repository.getUsersNotInGroup(groupId);
+    }
         
     return {
         getAll,
@@ -88,6 +92,7 @@ const Service = (dbClient) => {
         login,
         removeById,
         fullUpdateById,
+        getUsersNotInGroup
     };
 };
 

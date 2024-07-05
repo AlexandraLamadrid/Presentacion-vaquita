@@ -24,6 +24,12 @@ const USERS_NOT_IN_GROUP = `
     ORDER BY id ASC 
 `;
 
+const USERS_IN_GROUP = `
+    SELECT id, name, email FROM users
+    where id in (select user_id from groups_users where group_id = $1)
+    ORDER BY id ASC 
+`;
+
 const Repository = (dbClient) => {
 
     const getAll = async () => {
@@ -84,6 +90,11 @@ const Repository = (dbClient) => {
         return result.rows;
     }
 
+    const getUsersInGroup = async (groupId) => {
+        const result = await dbClient.query(USERS_IN_GROUP, [groupId]);
+        return result.rows;
+    }
+
     return {
         getAll,
         getById,
@@ -93,7 +104,8 @@ const Repository = (dbClient) => {
         fullUpdateById,
         getByEmailPassword,
         countByNameNotId,
-        getUsersNotInGroup
+        getUsersNotInGroup,
+        getUsersInGroup
     }
 }
 

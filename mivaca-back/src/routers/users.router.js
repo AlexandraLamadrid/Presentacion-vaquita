@@ -8,6 +8,7 @@ const createUserRouter = () => {
     const controller = Controller();
 
     router.get('/:id', continuator(controller.getById));
+    router.get('/notingroup/:groupId', continuator(controller.getUsersNotInGroup));
     router.post('/', continuator(controller.create));
 
     return router;

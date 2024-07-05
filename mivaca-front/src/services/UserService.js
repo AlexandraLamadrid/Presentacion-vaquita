@@ -10,4 +10,13 @@ const create = (body) => {
   });
 };
 
-export { create };
+const getAllNotInGroup = (groupId) => {
+  return axios.get(`${BASE_URL}/users/notingroup/${groupId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+  });
+};
+
+export { create, getAllNotInGroup };

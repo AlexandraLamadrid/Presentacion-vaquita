@@ -37,6 +37,14 @@ const Controller = () => {
         res.status(201).json(createdGroup);
     }
 
+    const addFriend = async (req, res) => {
+        const service = Service(req.dbClient, req.user.id);
+        const groupId = req.params.groupId;
+        const friendId = req.params.friendId;
+        await service.addFriend(groupId, friendId);
+        res.status(204).end();
+    }
+
     const fullUpdateById = async (req, res) => {
         const service = Service(req.dbClient, req.user.id);
         const id = req.params.id;
@@ -58,7 +66,8 @@ const Controller = () => {
         getById,
         deleteById,
         create,
-        fullUpdateById
+        fullUpdateById,
+        addFriend
     }
 }
 

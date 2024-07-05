@@ -20,8 +20,10 @@ const getById = (id) => {
   });
 };
 
-const addFriendToGroup = (groupId, friend) => {
-  return axios.post(`${BASE_URL}/${groupId}/friends`, friend, {
+const addFriendToGroup = (groupId, friendId) => {
+  const url = `${BASE_URL}/${groupId}/friends/${friendId}`;
+  console.info(url);
+  return axios.post(url, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${sessionStorage.getItem('token')}`,
